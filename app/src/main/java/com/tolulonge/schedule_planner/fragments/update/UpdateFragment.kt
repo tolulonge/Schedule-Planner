@@ -9,7 +9,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.tolulonge.schedule_planner.R
-import com.tolulonge.schedule_planner.data.model.Priority
 import com.tolulonge.schedule_planner.data.model.ToDoData
 import com.tolulonge.schedule_planner.data.viewmodel.ToDoViewModel
 import com.tolulonge.schedule_planner.databinding.FragmentUpdateBinding
@@ -31,14 +30,14 @@ class UpdateFragment : Fragment() {
         // Inflate the layout for this fragment
         setHasOptionsMenu(true)
         _binding = FragmentUpdateBinding.inflate(inflater, container, false)
+        binding.args = args
+
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.currentTitleEt.setText(args.currentItem.title)
-        binding.currentDescriptionEt.setText(args.currentItem.description)
-        binding.currentPrioritiesSpinner.setSelection(mSharedViewModel.parsePriorityToInt(args.currentItem.priority))
+
         binding.currentPrioritiesSpinner.onItemSelectedListener = mSharedViewModel.listener
 
     }

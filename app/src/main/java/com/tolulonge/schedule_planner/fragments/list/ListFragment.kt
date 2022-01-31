@@ -7,11 +7,16 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.tolulonge.schedule_planner.R
+import com.tolulonge.schedule_planner.data.model.ToDoData
 import com.tolulonge.schedule_planner.data.viewmodel.ToDoViewModel
 import com.tolulonge.schedule_planner.databinding.FragmentListBinding
 import com.tolulonge.schedule_planner.fragments.SharedViewModel
+import com.tolulonge.schedule_planner.fragments.list.adapter.ListAdapter
 
 class ListFragment : Fragment() {
 
@@ -30,42 +35,58 @@ class ListFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentListBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = this
+        binding.mSharedViewModel = sharedViewModel
         setHasOptionsMenu(true)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.action_listFragment_to_addFragment)
-        }
         binding.listLayout.setOnClickListener {
             findNavController().navigate(R.id.action_listFragment_to_updateFragment)
         }
+        setupRecyclerView()
+
+        mToDoViewModel.getAllData.observe(viewLifecycleOwner) {
+            sharedViewModel.checkIfDatabaseEmpty(it)
+            mAdapter.setData(it)
+        }
+
+    }
+
+    private fun setupRecyclerView() {
         binding.recyclerView.apply {
             adapter = mAdapter
             layoutManager = LinearLayoutManager(requireActivity())
-        }
-
-        mToDoViewModel.getAllData.observe(viewLifecycleOwner,{
-            sharedViewModel.checkIfDatabaseEmpty(it)
-            mAdapter.setData(it)
-        })
-
-        sharedViewModel.emptyDatabase.observe(viewLifecycleOwner,{
-            showEmptyDatabaseViews(it)
-        })
+        }.also { swipeToDelete(it) }
     }
 
-    private fun showEmptyDatabaseViews(emptyDatabase: Boolean) {
-        if (emptyDatabase){
-            binding.noDataImageView.visibility = View.VISIBLE
-            binding.noDataTextView.visibility = View.VISIBLE
-        }else{
-            binding.noDataImageView.visibility = View.INVISIBLE
-            binding.noDataTextView.visibility = View.INVISIBLE
+    private fun swipeToDelete(recyclerView: RecyclerView){
+        val swipeToDeleteCallback = object : SwipeToDelete(){
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val deletedItem = mAdapter.dataList[viewHolder.adapterPosition]
+                mToDoViewModel.deleteItem(deletedItem)
+                mAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+                restoreDeletedData(viewHolder.itemView, deletedItem, viewHolder.adapterPosition)
+
+            }
         }
 
+        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
+    }
+
+    private fun restoreDeletedData(view: View, deletedItem : ToDoData, position: Int){
+        val snackBar = Snackbar.make(
+            view,"Deleted '${deletedItem.title}'",Snackbar.LENGTH_LONG
+        )
+        snackBar.setAction("Undo"){
+            mToDoViewModel.insertData(deletedItem)
+            mAdapter.notifyItemChanged(position)
+        }
+        snackBar.show()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="args"
+            type="com.tolulonge.schedule_planner.fragments.update.UpdateFragmentArgs" />
+    </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="24dp"
@@ -18,6 +25,7 @@
             android:inputType="textPersonName"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
+            android:text="@{args.currentItem.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -32,6 +40,7 @@
             android:entries="@array/priorities"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
+            android:parsePriorityToInt="@{args.currentItem.priority}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,6 +59,7 @@
             android:paddingStart="24dp"
             android:paddingTop="16dp"
             android:paddingEnd="24dp"
+            android:text="@{args.currentItem.description}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -57,3 +67,4 @@
             app:layout_constraintTop_toBottomOf="@+id/current_priorities_spinner" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

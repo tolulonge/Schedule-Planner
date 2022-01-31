@@ -1,11 +1,9 @@
 <component name="libraryTable">
   <library name="Gradle: jp.wasabeef:recyclerview-animators:3.0.0@aar">
     <CLASSES>
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/121eced7b24e321b50f7a162d1215da8/transformed/jetified-recyclerview-animators-3.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/93c2b8b57c29c767a6df729762568e64/transformed/jetified-recyclerview-animators-3.0.0/res" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/87627abcabcd88b96993afd4b63cecbc/transformed/jetified-recyclerview-animators-3.0.0/AndroidManifest.xml" />
-      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/87627abcabcd88b96993afd4b63cecbc/transformed/jetified-recyclerview-animators-3.0.0/res" />
-      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/87627abcabcd88b96993afd4b63cecbc/transformed/jetified-recyclerview-animators-3.0.0/jars/classes.jar!/" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/d9ec937bf7fdd2bd9590acd433d63748/transformed/jetified-recyclerview-animators-3.0.0/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d9ec937bf7fdd2bd9590acd433d63748/transformed/jetified-recyclerview-animators-3.0.0/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/d9ec937bf7fdd2bd9590acd433d63748/transformed/jetified-recyclerview-animators-3.0.0/AndroidManifest.xml" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/jp.wasabeef/recyclerview-animators/3.0.0/19fa46543c24f1fa26c5c62ceab5b77e17fa79a3/recyclerview-animators-3.0.0-javadoc.jar!/" />

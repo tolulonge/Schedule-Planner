@@ -13,7 +13,7 @@ import com.tolulonge.schedule_planner.data.model.ToDoData
 
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
-    val emptyDatabase: MutableLiveData<Boolean> = MutableLiveData(true)
+    val emptyDatabase: MutableLiveData<Boolean> = MutableLiveData(false)
 
     fun checkIfDatabaseEmpty(toDoData: List<ToDoData>){
         emptyDatabase.value = toDoData.isEmpty()
@@ -50,12 +50,4 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
         }
     }
 
-
-     fun parsePriorityToInt(priority: Priority) : Int{
-        return when(priority){
-            Priority.HIGH -> 0
-            Priority.MEDIUM -> 1
-            Priority.LOW -> 2
-        }
-    }
 }

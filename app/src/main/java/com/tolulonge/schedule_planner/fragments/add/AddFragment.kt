@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.tolulonge.schedule_planner.R
-import com.tolulonge.schedule_planner.data.model.Priority
 import com.tolulonge.schedule_planner.data.model.ToDoData
 import com.tolulonge.schedule_planner.data.viewmodel.ToDoViewModel
 import com.tolulonge.schedule_planner.databinding.FragmentAddBinding
