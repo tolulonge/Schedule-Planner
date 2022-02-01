@@ -11,6 +11,7 @@
         android:theme="@style/Theme.SchedulePlanner">
         <activity
             android:name="com.tolulonge.schedule_planner.MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

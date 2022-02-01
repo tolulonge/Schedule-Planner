@@ -8,9 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.*
 import com.google.android.material.snackbar.Snackbar
 import com.tolulonge.schedule_planner.R
 import com.tolulonge.schedule_planner.data.model.ToDoData
@@ -18,7 +16,8 @@ import com.tolulonge.schedule_planner.data.viewmodel.ToDoViewModel
 import com.tolulonge.schedule_planner.databinding.FragmentListBinding
 import com.tolulonge.schedule_planner.fragments.SharedViewModel
 import com.tolulonge.schedule_planner.fragments.list.adapter.ListAdapter
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
+import com.tolulonge.schedule_planner.utils.hideKeyboard
+import com.tolulonge.schedule_planner.utils.observeOnce
 
 class ListFragment : Fragment(), SearchView.OnQueryTextListener {
 
@@ -40,6 +39,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
         binding.lifecycleOwner = this
         binding.mSharedViewModel = sharedViewModel
         setHasOptionsMenu(true)
+        hideKeyboard(requireActivity())
         return binding.root
     }
 
@@ -53,6 +53,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
         mToDoViewModel.getAllData.observe(viewLifecycleOwner) {
             sharedViewModel.checkIfDatabaseEmpty(it)
             mAdapter.setData(it)
+            binding.recyclerView.scheduleLayoutAnimation()
         }
 
     }
@@ -60,10 +61,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun setupRecyclerView() {
         binding.recyclerView.apply {
             adapter = mAdapter
-            layoutManager = LinearLayoutManager(requireActivity())
-            itemAnimator = SlideInUpAnimator().apply {
-                addDuration = 300
-            }
+            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
         }.also { swipeToDelete(it) }
     }
 
@@ -73,7 +71,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
                 val deletedItem = mAdapter.dataList[viewHolder.adapterPosition]
                 mToDoViewModel.deleteItem(deletedItem)
                 mAdapter.notifyItemRemoved(viewHolder.adapterPosition)
-                restoreDeletedData(viewHolder.itemView, deletedItem, viewHolder.adapterPosition)
+                restoreDeletedData(viewHolder.itemView, deletedItem)
 
             }
         }
@@ -83,13 +81,12 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     }
 
-    private fun restoreDeletedData(view: View, deletedItem : ToDoData, position: Int){
+    private fun restoreDeletedData(view: View, deletedItem: ToDoData){
         val snackBar = Snackbar.make(
             view,"Deleted '${deletedItem.title}'",Snackbar.LENGTH_LONG
         )
         snackBar.setAction("Undo"){
             mToDoViewModel.insertData(deletedItem)
-            mAdapter.notifyItemChanged(position)
         }
         snackBar.show()
     }
@@ -108,6 +105,16 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
         when(item.itemId){
             R.id.menu_delete_all -> {
                 confirmRemoval()
+            }
+            R.id.menu_priority_high -> {
+                mToDoViewModel.sortByHighPriority.observe(viewLifecycleOwner){
+                    mAdapter.setData(it)
+                }
+            }
+            R.id.menu_priority_low -> {
+                mToDoViewModel.sortByLowPriority.observe(viewLifecycleOwner){
+                    mAdapter.setData(it)
+                }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -147,7 +154,7 @@ class ListFragment : Fragment(), SearchView.OnQueryTextListener {
     private fun searchThroughDatabase(queryParam: String) {
         val searchQuery = "%$queryParam%"
 
-        mToDoViewModel.searchDatabase(searchQuery).observe(viewLifecycleOwner){list->
+        mToDoViewModel.searchDatabase(searchQuery).observeOnce(viewLifecycleOwner){list->
             list?.let {
                 mAdapter.setData(it)
             }

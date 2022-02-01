@@ -38,7 +38,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
     }
 
      fun verifyDataFromUser(title: String, desc: String) : Boolean{
-        return if (title.isEmpty() || desc.isEmpty()) false else !(title.isEmpty() || desc.isEmpty())
+        return !(title.isEmpty() || desc.isEmpty())
     }
 
      fun parsePriority(priority: String) : Priority {
